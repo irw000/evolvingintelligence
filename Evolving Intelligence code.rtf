@@ -1,0 +1,442 @@
+{\rtf1\ansi\ansicpg950\cocoartf2868
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue255;\red255\green255\blue254;\red0\green0\blue0;
+\red14\green110\blue109;\red144\green1\blue18;\red15\green112\blue1;\red19\green118\blue70;\red191\green28\blue37;
+}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c100000;\cssrgb\c100000\c100000\c99608;\cssrgb\c0\c0\c0;
+\cssrgb\c0\c50196\c50196;\cssrgb\c63922\c8235\c8235;\cssrgb\c0\c50196\c0;\cssrgb\c3529\c52549\c34510;\cssrgb\c80392\c19216\c19216;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 import\cf0 \strokec4  \cf5 \strokec5 React\cf0 \strokec4 , \{ useEffect, useState \} \cf2 \strokec2 from\cf0 \strokec4  \cf6 \strokec6 'react'\cf0 \strokec4 ;\cb1 \
+\cf2 \cb3 \strokec2 import\cf0 \strokec4  \{ motion, \cf5 \strokec5 AnimatePresence\cf0 \strokec4  \} \cf2 \strokec2 from\cf0 \strokec4  \cf6 \strokec6 'motion/react'\cf0 \strokec4 ;\cb1 \
+\cf2 \cb3 \strokec2 import\cf0 \strokec4  \{ \cb1 \
+\cb3   \cf5 \strokec5 ArrowRight\cf0 \strokec4 , \cb1 \
+\cb3   \cf5 \strokec5 Menu\cf0 \strokec4 , \cb1 \
+\cb3   \cf5 \strokec5 X\cf0 \strokec4 , \cb1 \
+\cb3   \cf5 \strokec5 Compass\cf0 \strokec4 , \cb1 \
+\cb3   \cf5 \strokec5 Layers\cf0 \strokec4 , \cb1 \
+\cb3   \cf5 \strokec5 Users\cf0 \strokec4 , \cb1 \
+\cb3   \cf5 \strokec5 Activity\cf0 \strokec4 , \cb1 \
+\cb3   \cf5 \strokec5 BookOpen\cf0 \strokec4 ,\cb1 \
+\cb3   \cf5 \strokec5 ChevronRight\cf0 \cb1 \strokec4 \
+\cb3 \} \cf2 \strokec2 from\cf0 \strokec4  \cf6 \strokec6 'lucide-react'\cf0 \strokec4 ;\cb1 \
+\cf2 \cb3 \strokec2 import\cf0 \strokec4  \{ cn \} \cf2 \strokec2 from\cf0 \strokec4  \cf6 \strokec6 './lib/utils'\cf0 \strokec4 ;\cb1 \
+\
+\cf7 \cb3 \strokec7 // --- Types ---\cf0 \cb1 \strokec4 \
+\cf2 \cb3 \strokec2 interface\cf0 \strokec4  \cf5 \strokec5 ContentItem\cf0 \strokec4  \{\cb1 \
+\cb3   title: \cf2 \strokec2 string\cf0 \strokec4 ;\cb1 \
+\cb3   description: \cf2 \strokec2 string\cf0 \strokec4 ;\cb1 \
+\cb3   link?: \cf2 \strokec2 string\cf0 \strokec4 ;\cb1 \
+\cb3 \}\cb1 \
+\
+\cf2 \cb3 \strokec2 interface\cf0 \strokec4  \cf5 \strokec5 NetworkMember\cf0 \strokec4  \{\cb1 \
+\cb3   name: \cf2 \strokec2 string\cf0 \strokec4 ;\cb1 \
+\cb3   role: \cf2 \strokec2 string\cf0 \strokec4 ;\cb1 \
+\cb3   title: \cf2 \strokec2 string\cf0 \strokec4 ;\cb1 \
+\cb3   bio: \cf2 \strokec2 string\cf0 \strokec4 ;\cb1 \
+\cb3   image?: \cf2 \strokec2 string\cf0 \strokec4 ;\cb1 \
+\cb3 \}\cb1 \
+\
+\cf2 \cb3 \strokec2 interface\cf0 \strokec4  \cf5 \strokec5 Signal\cf0 \strokec4  \{\cb1 \
+\cb3   date: \cf2 \strokec2 string\cf0 \strokec4 ;\cb1 \
+\cb3   content: \cf2 \strokec2 string\cf0 \strokec4 ;\cb1 \
+\cb3   \cf2 \strokec2 type\cf0 \strokec4 : \cf2 \strokec2 string\cf0 \strokec4 ;\cb1 \
+\cb3 \}\cb1 \
+\
+\cf2 \cb3 \strokec2 interface\cf0 \strokec4  \cf5 \strokec5 EcosystemData\cf0 \strokec4  \{\cb1 \
+\cb3   howWeThink: \cf5 \strokec5 ContentItem\cf0 \strokec4 [];\cb1 \
+\cb3   whatWeExplore: \cf5 \strokec5 ContentItem\cf0 \strokec4 [];\cb1 \
+\cb3   howPeopleEngage: \cf5 \strokec5 ContentItem\cf0 \strokec4 [];\cb1 \
+\cb3   theNetwork: \cf5 \strokec5 NetworkMember\cf0 \strokec4 [];\cb1 \
+\cb3   ongoingSignals: \cf5 \strokec5 Signal\cf0 \strokec4 [];\cb1 \
+\cb3 \}\cb1 \
+\
+\cf7 \cb3 \strokec7 // --- Mock Data (Fallback) ---\cf0 \cb1 \strokec4 \
+\cf2 \cb3 \strokec2 const\cf0 \strokec4  \cf5 \strokec5 MOCK_DATA\cf0 \strokec4 : \cf5 \strokec5 EcosystemData\cf0 \strokec4  = \{\cb1 \
+\cb3   howWeThink: [\cb1 \
+\cb3     \{ title: \cf6 \strokec6 "\uc0\u36328 \u23416 \u31185 \u36879 \u37857 "\cf0 \strokec4 , description: \cf6 \strokec6 "\uc0\u25171 \u30772 \u23416 \u31185 \u37002 \u30028 \u65292 \u24478 \u29289 \u29702 \u12289 \u29983 \u29289 \u33287 \u31038 \u26371 \u31185 \u23416 \u20013 \u25552 \u21462 \u24515 \u26234 \u27169 \u22411 \u12290 "\cf0 \strokec4  \},\cb1 \
+\cb3     \{ title: \cf6 \strokec6 "\uc0\u19981 \u30906 \u23450 \u24615 \u31649 \u29702 "\cf0 \strokec4 , description: \cf6 \strokec6 "\uc0\u22312 \u36039 \u35338 \u19981 \u20840 \u30340 \u24773 \u27841 \u19979 \u65292 \u22914 \u20309 \u24314 \u31435 \u31337 \u20581 \u30340 \u27770 \u31574 \u26694 \u26550 \u12290 "\cf0 \strokec4  \},\cb1 \
+\cb3     \{ title: \cf6 \strokec6 "\uc0\u35222 \u35282 \u36681 \u25563 "\cf0 \strokec4 , description: \cf6 \strokec6 "\uc0\u32244 \u32722 \u24478 \u19981 \u21516 \u32173 \u24230 \u35264 \u23519 \u21516 \u19968 \u21839 \u38988 \u65292 \u30332 \u29694 \u38577 \u34255 \u30340 \u32080 \u27083 \u12290 "\cf0 \strokec4  \}\cb1 \
+\cb3   ],\cb1 \
+\cb3   whatWeExplore: [\cb1 \
+\cb3     \{ title: \cf6 \strokec6 "AI \uc0\u33287 \u20154 \u39006 \u21028 \u26039 "\cf0 \strokec4 , description: \cf6 \strokec6 "\uc0\u30070 \u28436 \u31639 \u27861 \u20171 \u20837 \u27770 \u31574 \u65292 \u20154 \u39006 \u30340 \u30452 \u35258 \u33287 \u21028 \u26039 \u21147 \u35442 \u22914 \u20309 \u28436 \u36914 \u65311 "\cf0 \strokec4  \},\cb1 \
+\cb3     \{ title: \cf6 \strokec6 "\uc0\u22320 \u32227 \u25919 \u27835 \u21205 \u24907 "\cf0 \strokec4 , description: \cf6 \strokec6 "\uc0\u29702 \u35299 \u20840 \u29699 \u27402 \u21147 \u32080 \u27083 \u30340 \u35722 \u36983 \u21450 \u20854 \u23565 \u22312 \u22320 \u27770 \u31574 \u30340 \u24433 \u38911 \u12290 "\cf0 \strokec4  \},\cb1 \
+\cb3     \{ title: \cf6 \strokec6 "\uc0\u34892 \u26143 \u20581 \u24247 "\cf0 \strokec4 , description: \cf6 \strokec6 "\uc0\u25506 \u35342 \u20154 \u39006 \u31995 \u32113 \u33287 \u22320 \u29699 \u29983 \u24907 \u31995 \u32113 \u30340 \u20849 \u29983 \u38364 \u20418 \u12290 "\cf0 \strokec4  \}\cb1 \
+\cb3   ],\cb1 \
+\cb3   howPeopleEngage: [\cb1 \
+\cb3     \{ title: \cf6 \strokec6 "\uc0\u23416 \u32722 \u26053 \u31243 "\cf0 \strokec4 , description: \cf6 \strokec6 "\uc0\u38263 \u26399 \u30340 \u12289 \u38750 \u32218 \u24615 \u30340 \u24605 \u32173 \u25506 \u32034 \u36942 \u31243 \u12290 "\cf0 \strokec4  \},\cb1 \
+\cb3     \{ title: \cf6 \strokec6 "\uc0\u23565 \u35441 \u27801 \u40845 "\cf0 \strokec4 , description: \cf6 \strokec6 "\uc0\u28145 \u24230 \u30340 \u12289 \u21516 \u20757 \u38291 \u30340 \u26234 \u24935 \u30896 \u25758 \u12290 "\cf0 \strokec4  \},\cb1 \
+\cb3     \{ title: \cf6 \strokec6 "\uc0\u30740 \u31350 \u21332 \u20316 "\cf0 \strokec4 , description: \cf6 \strokec6 "\uc0\u23559 \u29702 \u35542 \u25033 \u29992 \u26044 \u30495 \u23526 \u19990 \u30028 \u30340 \u39640 \u39080 \u38570 \u25361 \u25136 \u12290 "\cf0 \strokec4  \}\cb1 \
+\cb3   ],\cb1 \
+\cb3   theNetwork: [\cb1 \
+\cb3     \{ \cb1 \
+\cb3       name: \cf6 \strokec6 "\uc0\u26446 \u26126 "\cf0 \strokec4 , \cb1 \
+\cb3       role: \cf6 \strokec6 "\uc0\u23526 \u36368 \u32773 "\cf0 \strokec4 , \cb1 \
+\cb3       title: \cf6 \strokec6 "\uc0\u35079 \u38620 \u31995 \u32113 \u30740 \u31350 \u21729 "\cf0 \strokec4 ,\cb1 \
+\cb3       bio: \cf6 \strokec6 "\uc0\u23560 \u27880 \u26044 \u35079 \u38620 \u31995 \u32113 \u20013 \u30340 \u27770 \u31574 \u20778 \u21270 \u65292 \u33268 \u21147 \u26044 \u23559 \u28151 \u27788 \u29702 \u35542 \u25033 \u29992 \u26044 \u31038 \u26371 \u32068 \u32340 \u32080 \u27083 \u12290 "\cf0 \strokec4 ,\cb1 \
+\cb3       image: \cf6 \strokec6 "https://picsum.photos/seed/li/400/500"\cf0 \cb1 \strokec4 \
+\cb3     \},\cb1 \
+\cb3     \{ \cb1 \
+\cb3       name: \cf6 \strokec6 "\uc0\u24373 \u33775 "\cf0 \strokec4 , \cb1 \
+\cb3       role: \cf6 \strokec6 "\uc0\u23566 \u24107 "\cf0 \strokec4 , \cb1 \
+\cb3       title: \cf6 \strokec6 "\uc0\u21069 \u25136 \u30053 \u39015 \u21839 "\cf0 \strokec4 ,\cb1 \
+\cb3       bio: \cf6 \strokec6 "\uc0\u25793 \u26377 \u19977 \u21313 \u24180 \u36328 \u22283 \u20225 \u26989 \u25136 \u30053 \u35215 \u21123 \u32147 \u39511 \u65292 \u25797 \u38263 \u24341 \u23566 \u39640 \u38542 \u20027 \u31649 \u22312 \u26997 \u31471 \u19981 \u30906 \u23450 \u24615 \u19979 \u30340 \u24605 \u32173 \u36681 \u22411 \u12290 "\cf0 \strokec4 ,\cb1 \
+\cb3       image: \cf6 \strokec6 "https://picsum.photos/seed/zhang/400/500"\cf0 \cb1 \strokec4 \
+\cb3     \},\cb1 \
+\cb3     \{ \cb1 \
+\cb3       name: \cf6 \strokec6 "\uc0\u38515 \u24605 "\cf0 \strokec4 , \cb1 \
+\cb3       role: \cf6 \strokec6 "\uc0\u21332 \u20316 \u32773 "\cf0 \strokec4 , \cb1 \
+\cb3       title: \cf6 \strokec6 "\uc0\u36328 \u38936 \u22495 \u35373 \u35336 \u24107 "\cf0 \strokec4 ,\cb1 \
+\cb3       bio: \cf6 \strokec6 "\uc0\u25506 \u32034 \u35373 \u35336 \u24605 \u32173 \u33287 \u21746 \u23416 \u30340 \u20132 \u38598 \u65292 \u28858 \u29983 \u24907 \u31995 \u32113 \u25552 \u20379 \u35222 \u35258 \u21270 \u33287 \u24863 \u23448 \u21270 \u30340 \u24605 \u32771 \u24037 \u20855 \u12290 "\cf0 \strokec4 ,\cb1 \
+\cb3       image: \cf6 \strokec6 "https://picsum.photos/seed/chen/400/500"\cf0 \cb1 \strokec4 \
+\cb3     \}\cb1 \
+\cb3   ],\cb1 \
+\cb3   ongoingSignals: [\cb1 \
+\cb3     \{ date: \cf6 \strokec6 "2024.03.20"\cf0 \strokec4 , content: \cf6 \strokec6 "\uc0\u38364 \u26044 \u12300 \u28436 \u31639 \u27861 \u36879 \u26126 \u24230 \u12301 \u30340 \u28145 \u24230 \u35342 \u35542 \u27491 \u22312 \u36914 \u34892 \u20013 \u12290 "\cf0 \strokec4 , \cf2 \strokec2 type\cf0 \strokec4 : \cf6 \strokec6 "\uc0\u35342 \u35542 "\cf0 \strokec4  \},\cb1 \
+\cb3     \{ date: \cf6 \strokec6 "2024.03.15"\cf0 \strokec4 , content: \cf6 \strokec6 "\uc0\u26032 \u30340 \u30740 \u31350 \u36335 \u24465 \u65306 \u29983 \u29289 \u22810 \u27171 \u24615 \u33287 \u37329 \u34701 \u38860 \u24615 \u30340 \u38364 \u32879 \u12290 "\cf0 \strokec4 , \cf2 \strokec2 type\cf0 \strokec4 : \cf6 \strokec6 "\uc0\u30740 \u31350 "\cf0 \strokec4  \}\cb1 \
+\cb3   ]\cb1 \
+\cb3 \};\cb1 \
+\
+\cf7 \cb3 \strokec7 // --- Components ---\cf0 \cb1 \strokec4 \
+\
+\cf2 \cb3 \strokec2 const\cf0 \strokec4  \cf5 \strokec5 Navbar\cf0 \strokec4  = (\{ activeSection, setActiveSection \}: \{ activeSection: \cf2 \strokec2 string\cf0 \strokec4 , setActiveSection: (s: \cf2 \strokec2 string\cf0 \strokec4 ) => \cf2 \strokec2 void\cf0 \strokec4  \}) => \{\cb1 \
+\cb3   \cf2 \strokec2 const\cf0 \strokec4  [isOpen, setIsOpen] = useState(\cf2 \strokec2 false\cf0 \strokec4 );\cb1 \
+\cb3   \cf2 \strokec2 const\cf0 \strokec4  navItems = [\cb1 \
+\cb3     \{ id: \cf6 \strokec6 'home'\cf0 \strokec4 , label: \cf6 \strokec6 '\uc0\u39318 \u38913 '\cf0 \strokec4  \},\cb1 \
+\cb3     \{ id: \cf6 \strokec6 'think'\cf0 \strokec4 , label: \cf6 \strokec6 '\uc0\u24605 \u32173 \u26041 \u24335 '\cf0 \strokec4  \},\cb1 \
+\cb3     \{ id: \cf6 \strokec6 'explore'\cf0 \strokec4 , label: \cf6 \strokec6 '\uc0\u25506 \u32034 \u38936 \u22495 '\cf0 \strokec4  \},\cb1 \
+\cb3     \{ id: \cf6 \strokec6 'engage'\cf0 \strokec4 , label: \cf6 \strokec6 '\uc0\u21443 \u33287 \u36335 \u24465 '\cf0 \strokec4  \},\cb1 \
+\cb3     \{ id: \cf6 \strokec6 'network'\cf0 \strokec4 , label: \cf6 \strokec6 '\uc0\u32178 \u32097 \u36899 \u32080 '\cf0 \strokec4  \},\cb1 \
+\cb3     \{ id: \cf6 \strokec6 'signals'\cf0 \strokec4 , label: \cf6 \strokec6 '\uc0\u25345 \u32396 \u35338 \u34399 '\cf0 \strokec4  \},\cb1 \
+\cb3   ];\cb1 \
+\
+\cb3   \cf2 \strokec2 return\cf0 \strokec4  (\cb1 \
+\cb3     <nav className=\cf6 \strokec6 "fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-zinc-100"\cf0 \strokec4 >\cb1 \
+\cb3       <div className=\cf6 \strokec6 "max-w-7xl mx-auto px-6 h-20 flex items-center justify-between"\cf0 \strokec4 >\cb1 \
+\cb3         <div \cb1 \
+\cb3           className=\cf6 \strokec6 "text-brick font-serif text-2xl tracking-tighter cursor-pointer"\cf0 \cb1 \strokec4 \
+\cb3           onClick=\{() => setActiveSection(\cf6 \strokec6 'home'\cf0 \strokec4 )\}\cb1 \
+\cb3         >\cb1 \
+\cb3           \cf5 \strokec5 EVOLVING\cf0 \strokec4  \cf5 \strokec5 INTELLIGENCE\cf0 \cb1 \strokec4 \
+\cb3         </div>\cb1 \
+\cb3         \cb1 \
+\cb3         \{\cf7 \strokec7 /* Desktop Nav */\cf0 \strokec4 \}\cb1 \
+\cb3         <div className=\cf6 \strokec6 "hidden md:flex space-x-8"\cf0 \strokec4 >\cb1 \
+\cb3           \{navItems.map(item => (\cb1 \
+\cb3             <button\cb1 \
+\cb3               key=\{item.id\}\cb1 \
+\cb3               onClick=\{() => setActiveSection(item.id)\}\cb1 \
+\cb3               className=\{cn(\cb1 \
+\cb3                 \cf6 \strokec6 "text-sm uppercase tracking-widest transition-colors hover:text-brick"\cf0 \strokec4 ,\cb1 \
+\cb3                 activeSection === item.id ? \cf6 \strokec6 "text-brick font-semibold"\cf0 \strokec4  : \cf6 \strokec6 "text-zinc-700"\cf0 \cb1 \strokec4 \
+\cb3               )\}\cb1 \
+\cb3             >\cb1 \
+\cb3               \{item.label\}\cb1 \
+\cb3             </button>\cb1 \
+\cb3           ))\}\cb1 \
+\cb3         </div>\cb1 \
+\
+\cb3         \{\cf7 \strokec7 /* Mobile Toggle */\cf0 \strokec4 \}\cb1 \
+\cb3         <button className=\cf6 \strokec6 "md:hidden"\cf0 \strokec4  onClick=\{() => setIsOpen(!isOpen)\}>\cb1 \
+\cb3           \{isOpen ? <\cf5 \strokec5 X\cf0 \strokec4  size=\{\cf8 \strokec8 24\cf0 \strokec4 \} /> : <\cf5 \strokec5 Menu\cf0 \strokec4  size=\{\cf8 \strokec8 24\cf0 \strokec4 \} />\}\cb1 \
+\cb3         </button>\cb1 \
+\cb3       </div>\cb1 \
+\
+\cb3       \{\cf7 \strokec7 /* Mobile Menu */\cf0 \strokec4 \}\cb1 \
+\cb3       <\cf5 \strokec5 AnimatePresence\cf0 \strokec4 >\cb1 \
+\cb3         \{isOpen && (\cb1 \
+\cb3           <motion.div\cb1 \
+\cb3             initial=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4 , y: -\cf8 \strokec8 20\cf0 \strokec4  \}\}\cb1 \
+\cb3             animate=\{\{ opacity: \cf8 \strokec8 1\cf0 \strokec4 , y: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3             exit=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4 , y: -\cf8 \strokec8 20\cf0 \strokec4  \}\}\cb1 \
+\cb3             className=\cf6 \strokec6 "absolute top-20 left-0 w-full bg-white border-b border-zinc-100 md:hidden"\cf0 \cb1 \strokec4 \
+\cb3           >\cb1 \
+\cb3             <div className=\cf6 \strokec6 "flex flex-col p-6 space-y-4"\cf0 \strokec4 >\cb1 \
+\cb3               \{navItems.map(item => (\cb1 \
+\cb3                 <button\cb1 \
+\cb3                   key=\{item.id\}\cb1 \
+\cb3                   onClick=\{() => \{\cb1 \
+\cb3                     setActiveSection(item.id);\cb1 \
+\cb3                     setIsOpen(\cf2 \strokec2 false\cf0 \strokec4 );\cb1 \
+\cb3                   \}\}\cb1 \
+\cb3                   className=\{cn(\cb1 \
+\cb3                     \cf6 \strokec6 "text-left text-lg font-serif"\cf0 \strokec4 ,\cb1 \
+\cb3                     activeSection === item.id ? \cf6 \strokec6 "text-brick"\cf0 \strokec4  : \cf6 \strokec6 "text-zinc-800"\cf0 \cb1 \strokec4 \
+\cb3                   )\}\cb1 \
+\cb3                 >\cb1 \
+\cb3                   \{item.label\}\cb1 \
+\cb3                 </button>\cb1 \
+\cb3               ))\}\cb1 \
+\cb3             </div>\cb1 \
+\cb3           </motion.div>\cb1 \
+\cb3         )\}\cb1 \
+\cb3       </\cf5 \strokec5 AnimatePresence\cf0 \strokec4 >\cb1 \
+\cb3     </nav>\cb1 \
+\cb3   );\cb1 \
+\cb3 \};\cb1 \
+\
+\cf2 \cb3 \strokec2 const\cf0 \strokec4  \cf5 \strokec5 SectionHeading\cf0 \strokec4  = (\{ title, subtitle \}: \{ title: \cf2 \strokec2 string\cf0 \strokec4 , subtitle?: \cf2 \strokec2 string\cf0 \strokec4  \}) => (\cb1 \
+\cb3   <div className=\cf6 \strokec6 "mb-16"\cf0 \strokec4 >\cb1 \
+\cb3     <h2 className=\cf6 \strokec6 "text-5xl md:text-7xl font-serif text-brick mb-4 leading-tight"\cf0 \strokec4 >\{title\}</h2>\cb1 \
+\cb3     \{subtitle && <p className=\cf6 \strokec6 "text-xl text-zinc-700 max-w-2xl font-normal leading-relaxed"\cf0 \strokec4 >\{subtitle\}</p>\}\cb1 \
+\cb3   </div>\cb1 \
+\cb3 );\cb1 \
+\
+\cf2 \cb3 \strokec2 const\cf0 \strokec4  \cf5 \strokec5 Card\cf0 \strokec4  = (\{ title, description, index \}: \{ title: \cf2 \strokec2 string\cf0 \strokec4 , description: \cf2 \strokec2 string\cf0 \strokec4 , index: \cf2 \strokec2 number\cf0 \strokec4 , key?: \cf2 \strokec2 any\cf0 \strokec4  \}) => (\cb1 \
+\cb3   <motion.div\cb1 \
+\cb3     initial=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4 , y: \cf8 \strokec8 20\cf0 \strokec4  \}\}\cb1 \
+\cb3     whileInView=\{\{ opacity: \cf8 \strokec8 1\cf0 \strokec4 , y: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3     transition=\{\{ delay: index * \cf8 \strokec8 0.1\cf0 \strokec4  \}\}\cb1 \
+\cb3     viewport=\{\{ once: \cf2 \strokec2 true\cf0 \strokec4  \}\}\cb1 \
+\cb3     className=\cf6 \strokec6 "group p-8 border border-zinc-200 hover:border-brick/20 transition-all duration-500 bg-white"\cf0 \cb1 \strokec4 \
+\cb3   >\cb1 \
+\cb3     <div className=\cf6 \strokec6 "text-xs text-zinc-500 mb-6 font-mono"\cf0 \strokec4 >\cf8 \strokec8 0\cf0 \strokec4 \{index + \cf8 \strokec8 1\cf0 \strokec4 \}</div>\cb1 \
+\cb3     <h3 className=\cf6 \strokec6 "text-2xl font-serif mb-4 group-hover:text-brick transition-colors"\cf0 \strokec4 >\{title\}</h3>\cb1 \
+\cb3     <p className=\cf6 \strokec6 "text-zinc-800 leading-relaxed font-normal"\cf0 \strokec4 >\{description\}</p>\cb1 \
+\cb3     <div className=\cf6 \strokec6 "mt-8 flex items-center text-brick opacity-0 group-hover:opacity-100 transition-opacity"\cf0 \strokec4 >\cb1 \
+\cb3       <span className=\cf6 \strokec6 "text-xs uppercase tracking-widest mr-2"\cf0 \strokec4 >\cf9 \strokec9 \uc0\u28145 \u20837 \u25506 \u32034 \cf0 \strokec4 </span>\cb1 \
+\cb3       <\cf5 \strokec5 ArrowRight\cf0 \strokec4  size=\{\cf8 \strokec8 14\cf0 \strokec4 \} />\cb1 \
+\cb3     </div>\cb1 \
+\cb3   </motion.div>\cb1 \
+\cb3 );\cb1 \
+\
+\cf2 \cb3 \strokec2 export\cf0 \strokec4  \cf2 \strokec2 default\cf0 \strokec4  \cf2 \strokec2 function\cf0 \strokec4  \cf5 \strokec5 App\cf0 \strokec4 () \{\cb1 \
+\cb3   \cf2 \strokec2 const\cf0 \strokec4  [activeSection, setActiveSection] = useState(\cf6 \strokec6 'home'\cf0 \strokec4 );\cb1 \
+\cb3   \cf2 \strokec2 const\cf0 \strokec4  [data, setData] = useState<\cf5 \strokec5 EcosystemData\cf0 \strokec4 >(\cf5 \strokec5 MOCK_DATA\cf0 \strokec4 );\cb1 \
+\cb3   \cf2 \strokec2 const\cf0 \strokec4  [loading, setLoading] = useState(\cf2 \strokec2 true\cf0 \strokec4 );\cb1 \
+\
+\cb3   useEffect(() => \{\cb1 \
+\cb3     \cf2 \strokec2 const\cf0 \strokec4  fetchData = \cf2 \strokec2 async\cf0 \strokec4  () => \{\cb1 \
+\cb3       \cf2 \strokec2 try\cf0 \strokec4  \{\cb1 \
+\cb3         \cf2 \strokec2 const\cf0 \strokec4  res = \cf2 \strokec2 await\cf0 \strokec4  fetch(\cf6 \strokec6 '/api/data'\cf0 \strokec4 );\cb1 \
+\cb3         \cf2 \strokec2 if\cf0 \strokec4  (res.ok) \{\cb1 \
+\cb3           \cf2 \strokec2 const\cf0 \strokec4  json = \cf2 \strokec2 await\cf0 \strokec4  res.json();\cb1 \
+\cb3           \cf7 \strokec7 // Only update if we actually got data back (not empty arrays from unconfigured sheet)\cf0 \cb1 \strokec4 \
+\cb3           \cf2 \strokec2 if\cf0 \strokec4  (json.howWeThink && json.howWeThink.length > \cf8 \strokec8 0\cf0 \strokec4 ) \{\cb1 \
+\cb3             setData(json);\cb1 \
+\cb3           \}\cb1 \
+\cb3         \}\cb1 \
+\cb3       \} \cf2 \strokec2 catch\cf0 \strokec4  (err) \{\cb1 \
+\cb3         console.error(\cf6 \strokec6 "Failed to fetch data, using mock data"\cf0 \strokec4 , err);\cb1 \
+\cb3       \} \cf2 \strokec2 finally\cf0 \strokec4  \{\cb1 \
+\cb3         setLoading(\cf2 \strokec2 false\cf0 \strokec4 );\cb1 \
+\cb3       \}\cb1 \
+\cb3     \};\cb1 \
+\cb3     fetchData();\cb1 \
+\cb3   \}, []);\cb1 \
+\
+\cb3   \cf2 \strokec2 return\cf0 \strokec4  (\cb1 \
+\cb3     <div className=\cf6 \strokec6 "min-h-screen bg-white selection:bg-brick/10 selection:text-brick"\cf0 \strokec4 >\cb1 \
+\cb3       <\cf5 \strokec5 Navbar\cf0 \strokec4  activeSection=\{activeSection\} setActiveSection=\{setActiveSection\} />\cb1 \
+\
+\cb3       <main className=\cf6 \strokec6 "pt-32 pb-20 px-6 max-w-7xl mx-auto"\cf0 \strokec4 >\cb1 \
+\cb3         <\cf5 \strokec5 AnimatePresence\cf0 \strokec4  mode=\cf6 \strokec6 "wait"\cf0 \strokec4 >\cb1 \
+\cb3           \{activeSection === \cf6 \strokec6 'home'\cf0 \strokec4  && (\cb1 \
+\cb3             <motion.section\cb1 \
+\cb3               key=\cf6 \strokec6 "home"\cf0 \cb1 \strokec4 \
+\cb3               initial=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3               animate=\{\{ opacity: \cf8 \strokec8 1\cf0 \strokec4  \}\}\cb1 \
+\cb3               exit=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3               className=\cf6 \strokec6 "min-h-[70vh] flex flex-col justify-center"\cf0 \cb1 \strokec4 \
+\cb3             >\cb1 \
+\cb3               <div className=\cf6 \strokec6 "max-w-4xl"\cf0 \strokec4 >\cb1 \
+\cb3                 <motion.div\cb1 \
+\cb3                   initial=\{\{ y: \cf8 \strokec8 20\cf0 \strokec4 , opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3                   animate=\{\{ y: \cf8 \strokec8 0\cf0 \strokec4 , opacity: \cf8 \strokec8 1\cf0 \strokec4  \}\}\cb1 \
+\cb3                   transition=\{\{ delay: \cf8 \strokec8 0.2\cf0 \strokec4  \}\}\cb1 \
+\cb3                   className=\cf6 \strokec6 "text-xs uppercase tracking-[0.3em] text-brick mb-8 font-semibold"\cf0 \cb1 \strokec4 \
+\cb3                 >\cb1 \
+\cb3                   \cf5 \strokec5 Education\cf9 \strokec9 \'96\cf5 \strokec5 Practice\cf0 \strokec4  \cf5 \strokec5 Ecosystem\cf0 \cb1 \strokec4 \
+\cb3                 </motion.div>\cb1 \
+\cb3                 <motion.h1\cb1 \
+\cb3                   initial=\{\{ y: \cf8 \strokec8 20\cf0 \strokec4 , opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3                   animate=\{\{ y: \cf8 \strokec8 0\cf0 \strokec4 , opacity: \cf8 \strokec8 1\cf0 \strokec4  \}\}\cb1 \
+\cb3                   transition=\{\{ delay: \cf8 \strokec8 0.3\cf0 \strokec4  \}\}\cb1 \
+\cb3                   className=\cf6 \strokec6 "text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-serif leading-[1.2] mb-12"\cf0 \cb1 \strokec4 \
+\cb3                 >\cb1 \
+\cb3                   \cf9 \strokec9 \uc0\u39640 \u24230 \u19981 \u30906 \u23450 \u20013 \u65292 \cf0 \strokec4 <br />\cb1 \
+\cb3                   \cf9 \strokec9 \uc0\u36899 \u25509 \u26410 \u30693 \u30086 \u22495 \u30340 \u20837 \u21475 \u12290 \cf0 \cb1 \strokec4 \
+\cb3                 </motion.h1>\cb1 \
+\cb3                 <motion.p\cb1 \
+\cb3                   initial=\{\{ y: \cf8 \strokec8 20\cf0 \strokec4 , opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3                   animate=\{\{ y: \cf8 \strokec8 0\cf0 \strokec4 , opacity: \cf8 \strokec8 1\cf0 \strokec4  \}\}\cb1 \
+\cb3                   transition=\{\{ delay: \cf8 \strokec8 0.4\cf0 \strokec4  \}\}\cb1 \
+\cb3                   className=\cf6 \strokec6 "text-xl md:text-2xl text-zinc-700 font-normal leading-relaxed max-w-3xl mb-16"\cf0 \cb1 \strokec4 \
+\cb3                 >\cb1 \
+\cb3                   \cf9 \strokec9 \uc0\u19968 \u20491 \u25345 \u32396 \u21205 \u24907 \u28436 \u21270 \u30340 \u24605 \u24819 \u27166 \u32016 \u65292 \u21295 \u32858 \u39640 \u28507 \u21147 \u23416 \u29983 \u12289 \u20840 \u29699 \u23416 \u32773 \u33287 \u36039 \u28145 \u23526 \u21209 \u32773 \u65292 \u22312 \u19981 \u30906 \u23450 \u30340 \u24373 \u21147 \u20013 \u20849 \u21516 \u25506 \u32034 \u33287 \u21069 \u34892 \u12290 \cf0 \cb1 \strokec4 \
+\cb3                 </motion.p>\cb1 \
+\cb3                 \cb1 \
+\cb3                 <div className=\cf6 \strokec6 "grid grid-cols-1 gap-12 border-t border-zinc-200 pt-12"\cf0 \strokec4 >\cb1 \
+\cb3                   <div className=\cf6 \strokec6 "space-y-4"\cf0 \strokec4 >\cb1 \
+\cb3                     <h4 className=\cf6 \strokec6 "font-serif text-xl"\cf0 \strokec4 >\cf9 \strokec9 \uc0\u26680 \u24515 \u29702 \u24565 \cf0 \strokec4 </h4>\cb1 \
+\cb3                     <p className=\cf6 \strokec6 "text-zinc-700 font-normal leading-relaxed max-w-4xl"\cf0 \strokec4 >\cb1 \
+\cb3                       \cf9 \strokec9 \uc0\u36328 \u36234 \u22823 \u23416 \u12289 \u23416 \u31185 \u33287 \u22283 \u30028 \u65292 \u23559 \u25945 \u32946 \u12289 \u23565 \u35441 \u33287 \u23526 \u21209 \u23526 \u36368 \u34701 \u28858 \u19968 \u39636 \u65292 \u36879 \u36942 \u12300 \u21109 \u26989 \u23478 \u24605 \u32173 \u12301 \u21450 \u12300 \u22810 \u38754 \u21521 \u24605 \u32173 \u12301 \u65292 \u25552 \u21319 \u24605 \u32771 \u12289 \u21028 \u26039 \u21450 \u27770 \u31574 \u32173 \u24230 \u65292 \u24341 \u23566 \u26410 \u20358 \u38936 \u23566 \u32773 \u22312 \cf5 \strokec5 AI\cf9 \strokec9 \uc0\u33287 \u22320 \u32227 \u25919 \u27835 \u21127 \u35722 \u30340 \u26178 \u20195 \u65292 \u38754 \u23565 \u35079 \u38620 \u24615 \u33287 \u19981 \u30906 \u23450 \u24615 \u30340 \u24605 \u32173 \u33287 \u27770 \u31574 \u33021 \u21147 \u12290 \cf0 \cb1 \strokec4 \
+\cb3                     </p>\cb1 \
+\cb3                   </div>\cb1 \
+\cb3                 </div>\cb1 \
+\cb3               </div>\cb1 \
+\cb3             </motion.section>\cb1 \
+\cb3           )\}\cb1 \
+\
+\cb3           \{activeSection === \cf6 \strokec6 'think'\cf0 \strokec4  && (\cb1 \
+\cb3             <motion.section\cb1 \
+\cb3               key=\cf6 \strokec6 "think"\cf0 \cb1 \strokec4 \
+\cb3               initial=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3               animate=\{\{ opacity: \cf8 \strokec8 1\cf0 \strokec4  \}\}\cb1 \
+\cb3               exit=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3             >\cb1 \
+\cb3               <\cf5 \strokec5 SectionHeading\cf0 \strokec4  \cb1 \
+\cb3                 title=\cf6 \strokec6 "\uc0\u24605 \u32173 \u26041 \u24335 "\cf0 \strokec4  \cb1 \
+\cb3                 subtitle=\cf6 \strokec6 "\uc0\u25105 \u20497 \u22914 \u20309 \u25509 \u36817 \u35079 \u38620 \u24615 \u65311 \u36879 \u36942 \u26694 \u26550 \u12289 \u36879 \u37857 \u33287 \u24515 \u26234 \u27169 \u22411 \u30340 \u24314 \u31435 \u65292 \u37325 \u26032 \u23450 \u32681 \u35264 \u23519 \u19990 \u30028 \u30340 \u26041 \u24335 \u12290 "\cf0 \cb1 \strokec4 \
+\cb3               />\cb1 \
+\cb3               <div className=\cf6 \strokec6 "grid grid-cols-1 md:grid-cols-3 gap-8"\cf0 \strokec4 >\cb1 \
+\cb3                 \{data.howWeThink.map((item, i) => (\cb1 \
+\cb3                   <\cf5 \strokec5 Card\cf0 \strokec4  key=\{i\} index=\{i\} title=\{item.title\} description=\{item.description\} />\cb1 \
+\cb3                 ))\}\cb1 \
+\cb3               </div>\cb1 \
+\cb3             </motion.section>\cb1 \
+\cb3           )\}\cb1 \
+\
+\cb3           \{activeSection === \cf6 \strokec6 'explore'\cf0 \strokec4  && (\cb1 \
+\cb3             <motion.section\cb1 \
+\cb3               key=\cf6 \strokec6 "explore"\cf0 \cb1 \strokec4 \
+\cb3               initial=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3               animate=\{\{ opacity: \cf8 \strokec8 1\cf0 \strokec4  \}\}\cb1 \
+\cb3               exit=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3             >\cb1 \
+\cb3               <\cf5 \strokec5 SectionHeading\cf0 \strokec4  \cb1 \
+\cb3                 title=\cf6 \strokec6 "\uc0\u25506 \u32034 \u38936 \u22495 "\cf0 \strokec4  \cb1 \
+\cb3                 subtitle=\cf6 \strokec6 "\uc0\u23559 \u19981 \u30906 \u23450 \u24615 \u12289 \u27770 \u31574 \u12289 AI\u12289 \u22320 \u32227 \u25919 \u27835 \u33287 \u34892 \u26143 \u20581 \u24247 \u35222 \u28858 \u19981 \u26039 \u28436 \u36914 \u30340 \u25552 \u21839 \u65292 \u32780 \u38750 \u38748 \u24907 \u30340 \u30693 \u35672 \u20027 \u38988 \u12290 "\cf0 \cb1 \strokec4 \
+\cb3               />\cb1 \
+\cb3               <div className=\cf6 \strokec6 "grid grid-cols-1 md:grid-cols-3 gap-8"\cf0 \strokec4 >\cb1 \
+\cb3                 \{data.whatWeExplore.map((item, i) => (\cb1 \
+\cb3                   <\cf5 \strokec5 Card\cf0 \strokec4  key=\{i\} index=\{i\} title=\{item.title\} description=\{item.description\} />\cb1 \
+\cb3                 ))\}\cb1 \
+\cb3               </div>\cb1 \
+\cb3             </motion.section>\cb1 \
+\cb3           )\}\cb1 \
+\
+\cb3           \{activeSection === \cf6 \strokec6 'engage'\cf0 \strokec4  && (\cb1 \
+\cb3             <motion.section\cb1 \
+\cb3               key=\cf6 \strokec6 "engage"\cf0 \cb1 \strokec4 \
+\cb3               initial=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3               animate=\{\{ opacity: \cf8 \strokec8 1\cf0 \strokec4  \}\}\cb1 \
+\cb3               exit=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3             >\cb1 \
+\cb3               <\cf5 \strokec5 SectionHeading\cf0 \strokec4  \cb1 \
+\cb3                 title=\cf6 \strokec6 "\uc0\u21443 \u33287 \u36335 \u24465 "\cf0 \strokec4  \cb1 \
+\cb3                 subtitle=\cf6 \strokec6 "\uc0\u27794 \u26377 \u20725 \u21270 \u30340 \u27161 \u31844 \u65292 \u21482 \u26377 \u19981 \u26039 \u28436 \u36914 \u30340 \u26053 \u31243 \u12290 \u28961 \u35542 \u26159 \u23416 \u32722 \u12289 \u23565 \u35441 \u25110 \u21332 \u20316 \u65292 \u37325 \u40670 \u22312 \u26044 \u38263 \u26399 \u30340 \u25237 \u20837 \u12290 "\cf0 \cb1 \strokec4 \
+\cb3               />\cb1 \
+\cb3               <div className=\cf6 \strokec6 "grid grid-cols-1 md:grid-cols-3 gap-8"\cf0 \strokec4 >\cb1 \
+\cb3                 \{data.howPeopleEngage.map((item, i) => (\cb1 \
+\cb3                   <\cf5 \strokec5 Card\cf0 \strokec4  key=\{i\} index=\{i\} title=\{item.title\} description=\{item.description\} />\cb1 \
+\cb3                 ))\}\cb1 \
+\cb3               </div>\cb1 \
+\cb3             </motion.section>\cb1 \
+\cb3           )\}\cb1 \
+\
+\cb3           \{activeSection === \cf6 \strokec6 'network'\cf0 \strokec4  && (\cb1 \
+\cb3             <motion.section\cb1 \
+\cb3               key=\cf6 \strokec6 "network"\cf0 \cb1 \strokec4 \
+\cb3               initial=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3               animate=\{\{ opacity: \cf8 \strokec8 1\cf0 \strokec4  \}\}\cb1 \
+\cb3               exit=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3             >\cb1 \
+\cb3               <\cf5 \strokec5 SectionHeading\cf0 \strokec4  \cb1 \
+\cb3                 title=\cf6 \strokec6 "\uc0\u32178 \u32097 \u36899 \u32080 "\cf0 \strokec4  \cb1 \
+\cb3                 subtitle=\cf6 \strokec6 "\uc0\u20154 \u26159 \u21205 \u24907 \u30340 \u35282 \u33394 \u65292 \u32780 \u38750 \u38748 \u24907 \u30340 \u32887 \u31281 \u12290 \u36889 \u26159 \u19968 \u20491 \u30001 \u23526 \u36368 \u32773 \u12289 \u21109 \u36774 \u32773 \u33287 \u24605 \u24819 \u23478 \u32068 \u25104 \u30340 \u20849 \u29983 \u32178 \u32097 \u12290 "\cf0 \cb1 \strokec4 \
+\cb3               />\cb1 \
+\cb3               <div className=\cf6 \strokec6 "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"\cf0 \strokec4 >\cb1 \
+\cb3                 \{data.theNetwork.map((member, i) => (\cb1 \
+\cb3                   <motion.div \cb1 \
+\cb3                     key=\{i\}\cb1 \
+\cb3                     initial=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4 , y: \cf8 \strokec8 20\cf0 \strokec4  \}\}\cb1 \
+\cb3                     whileInView=\{\{ opacity: \cf8 \strokec8 1\cf0 \strokec4 , y: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3                     transition=\{\{ delay: i * \cf8 \strokec8 0.1\cf0 \strokec4  \}\}\cb1 \
+\cb3                     viewport=\{\{ once: \cf2 \strokec2 true\cf0 \strokec4  \}\}\cb1 \
+\cb3                     className=\cf6 \strokec6 "group"\cf0 \cb1 \strokec4 \
+\cb3                   >\cb1 \
+\cb3                     <div className=\cf6 \strokec6 "aspect-[3/4] overflow-hidden mb-6 bg-zinc-100"\cf0 \strokec4 >\cb1 \
+\cb3                       \{member.image ? (\cb1 \
+\cb3                         <img \cb1 \
+\cb3                           src=\{member.image\} \cb1 \
+\cb3                           alt=\{member.name\} \cb1 \
+\cb3                           className=\cf6 \strokec6 "w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"\cf0 \cb1 \strokec4 \
+\cb3                           referrerPolicy=\cf6 \strokec6 "no-referrer"\cf0 \cb1 \strokec4 \
+\cb3                         />\cb1 \
+\cb3                       ) : (\cb1 \
+\cb3                         <div className=\cf6 \strokec6 "w-full h-full flex items-center justify-center text-zinc-300"\cf0 \strokec4 >\cb1 \
+\cb3                           <\cf5 \strokec5 Users\cf0 \strokec4  size=\{\cf8 \strokec8 48\cf0 \strokec4 \} />\cb1 \
+\cb3                         </div>\cb1 \
+\cb3                       )\}\cb1 \
+\cb3                     </div>\cb1 \
+\cb3                     <div className=\cf6 \strokec6 "space-y-2"\cf0 \strokec4 >\cb1 \
+\cb3                       <div className=\cf6 \strokec6 "flex items-baseline justify-between"\cf0 \strokec4 >\cb1 \
+\cb3                         <h3 className=\cf6 \strokec6 "text-2xl font-serif"\cf0 \strokec4 >\{member.name\}</h3>\cb1 \
+\cb3                         <span className=\cf6 \strokec6 "text-[10px] uppercase tracking-widest text-brick font-bold"\cf0 \strokec4 >\{member.role\}</span>\cb1 \
+\cb3                       </div>\cb1 \
+\cb3                       <div className=\cf6 \strokec6 "text-sm font-serif italic text-zinc-500"\cf0 \strokec4 >\{member.title\}</div>\cb1 \
+\cb3                       <p className=\cf6 \strokec6 "text-zinc-700 font-normal leading-relaxed text-sm pt-4 border-t border-zinc-100"\cf0 \strokec4 >\cb1 \
+\cb3                         \{member.bio\}\cb1 \
+\cb3                       </p>\cb1 \
+\cb3                     </div>\cb1 \
+\cb3                   </motion.div>\cb1 \
+\cb3                 ))\}\cb1 \
+\cb3               </div>\cb1 \
+\cb3             </motion.section>\cb1 \
+\cb3           )\}\cb1 \
+\
+\cb3           \{activeSection === \cf6 \strokec6 'signals'\cf0 \strokec4  && (\cb1 \
+\cb3             <motion.section\cb1 \
+\cb3               key=\cf6 \strokec6 "signals"\cf0 \cb1 \strokec4 \
+\cb3               initial=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3               animate=\{\{ opacity: \cf8 \strokec8 1\cf0 \strokec4  \}\}\cb1 \
+\cb3               exit=\{\{ opacity: \cf8 \strokec8 0\cf0 \strokec4  \}\}\cb1 \
+\cb3             >\cb1 \
+\cb3               <\cf5 \strokec5 SectionHeading\cf0 \strokec4  \cb1 \
+\cb3                 title=\cf6 \strokec6 "\uc0\u25345 \u32396 \u35338 \u34399 "\cf0 \strokec4  \cb1 \
+\cb3                 subtitle=\cf6 \strokec6 "\uc0\u30070 \u21069 \u27491 \u22312 \u34987 \u35342 \u35542 \u12289 \u36074 \u30097 \u25110 \u27298 \u35222 \u30340 \u35696 \u38988 \u12290 \u36889 \u19981 \u26159 \u26032 \u32862 \u26356 \u26032 \u65292 \u32780 \u26159 \u24605 \u24819 \u28436 \u36914 \u30340 \u36556 \u36321 \u12290 "\cf0 \cb1 \strokec4 \
+\cb3               />\cb1 \
+\cb3               <div className=\cf6 \strokec6 "space-y-8"\cf0 \strokec4 >\cb1 \
+\cb3                 \{data.ongoingSignals.map((signal, i) => (\cb1 \
+\cb3                   <div key=\{i\} className=\cf6 \strokec6 "flex flex-col md:flex-row md:items-center gap-6 p-8 bg-zinc-50 border-l-4 border-brick"\cf0 \strokec4 >\cb1 \
+\cb3                     <div className=\cf6 \strokec6 "font-mono text-sm text-zinc-500 shrink-0"\cf0 \strokec4 >\{signal.date\}</div>\cb1 \
+\cb3                     <div className=\cf6 \strokec6 "text-lg font-normal leading-relaxed flex-grow text-zinc-800"\cf0 \strokec4 >\{signal.content\}</div>\cb1 \
+\cb3                     <div className=\cf6 \strokec6 "text-xs uppercase tracking-widest px-3 py-1 bg-white border border-zinc-200 rounded-full shrink-0 text-center font-semibold"\cf0 \strokec4 >\cb1 \
+\cb3                       \{signal.\cf2 \strokec2 type\cf0 \strokec4 \}\cb1 \
+\cb3                     </div>\cb1 \
+\cb3                   </div>\cb1 \
+\cb3                 ))\}\cb1 \
+\cb3               </div>\cb1 \
+\cb3             </motion.section>\cb1 \
+\cb3           )\}\cb1 \
+\cb3         </\cf5 \strokec5 AnimatePresence\cf0 \strokec4 >\cb1 \
+\cb3       </main>\cb1 \
+\
+\cb3       <footer className=\cf6 \strokec6 "mt-40 border-t border-zinc-200 py-20 px-6"\cf0 \strokec4 >\cb1 \
+\cb3         <div className=\cf6 \strokec6 "max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12"\cf0 \strokec4 >\cb1 \
+\cb3           <div className=\cf6 \strokec6 "max-w-2xl"\cf0 \strokec4 >\cb1 \
+\cb3             <p className=\cf6 \strokec6 "text-brick font-medium text-sm tracking-wider mb-4"\cf0 \strokec4 >\cb1 \
+\cb3               \cf5 \strokec5 A\cf0 \strokec4  \cf5 \strokec5 SANDBOX\cf0 \strokec4  \cf5 \strokec5 FOR\cf0 \strokec4  \cf5 \strokec5 MULTI\cf0 \strokec4 -\cf5 \strokec5 FACETED\cf0 \strokec4  \cf5 \strokec5 LEARNING\cf0 \strokec4  \cf5 \strokec5 AND\cf0 \strokec4  \cf5 \strokec5 UNDERSTANDING\cf0 \strokec4  \cf5 \strokec5 UNDER\cf0 \strokec4  \cf5 \strokec5 HIGH\cf0 \strokec4  \cf5 \strokec5 UNCERTAINTY\cf0 \cb1 \strokec4 \
+\cb3             </p>\cb1 \
+\cb3             <p className=\cf6 \strokec6 "text-brick font-normal text-sm leading-relaxed"\cf0 \strokec4 >\cb1 \
+\cb3               \cf9 \strokec9 \uc0\u36992 \u35531 \u20320 \u22312 \u27492 \u20572 \u30041 \u12289 \u24605 \u32771 \u65292 \u20006 \u33287 \u20182 \u20154 \u20849 \u21516 \u25345 \u32396 \u25506 \u32034 \u26410 \u30693 \u30340 \u37002 \u30028 \u12290 \cf0 \cb1 \strokec4 \
+\cb3             </p>\cb1 \
+\cb3           </div>\cb1 \
+\cb3           <div className=\cf6 \strokec6 "flex flex-col gap-4 text-sm text-zinc-800"\cf0 \strokec4 >\cb1 \
+\cb3             <a href=\cf6 \strokec6 "#"\cf0 \strokec4  className=\cf6 \strokec6 "hover:text-brick transition-colors"\cf0 \strokec4 >\cf9 \strokec9 \uc0\u32879 \u32097 \u25105 \u20497 \cf0 \strokec4 </a>\cb1 \
+\cb3             <a href=\cf6 \strokec6 "#"\cf0 \strokec4  className=\cf6 \strokec6 "hover:text-brick transition-colors"\cf0 \strokec4 >\cf9 \strokec9 \uc0\u21152 \u20837 \u25105 \u20497 \cf0 \strokec4 </a>\cb1 \
+\cb3             <a href=\cf6 \strokec6 "#"\cf0 \strokec4  className=\cf6 \strokec6 "hover:text-brick transition-colors"\cf0 \strokec4 >\cf9 \strokec9 \uc0\u38577 \u31169 \u33287 \u20523 \u29702 \cf0 \strokec4 </a>\cb1 \
+\cb3           </div>\cb1 \
+\cb3         </div>\cb1 \
+\cb3         <div className=\cf6 \strokec6 "max-w-7xl mx-auto mt-20 text-[10px] uppercase tracking-[0.4em] text-zinc-400"\cf0 \strokec4 >\cb1 \
+\cb3           \cf9 \strokec9 \'a9\cf0 \strokec4  \cf8 \strokec8 2026\cf0 \strokec4  \cf9 \strokec9 \uc0\u24230 \u21270 \u26234 \u33021 \cf0 \strokec4  \cf5 \strokec5 Evolving\cf0 \strokec4  \cf5 \strokec5 Intelligence\cf0 \cb1 \strokec4 \
+\cb3         </div>\cb1 \
+\cb3       </footer>\cb1 \
+\cb3     </div>\cb1 \
+\cb3   );\cb1 \
+\cb3 \}}
