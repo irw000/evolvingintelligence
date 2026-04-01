@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brick: #8B0000;
+  --color-navy: #000080;
+  --color-beige: #F5F5DC;
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-zinc-950 font-sans antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-serif font-medium;
+  }
+}
+
+.editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2rem;
+}
+
+.fade-in {
+  animation: fadeIn 1.2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slow-scroll {
+  scroll-behavior: smooth;
+}
